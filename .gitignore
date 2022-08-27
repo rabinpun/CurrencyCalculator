@@ -75,7 +75,3 @@ fastlane/test_output
 # https://github.com/johnno1962/injectionforxcode
 iOSInjectionProject/
 Gemfile/
-
-#apollo schema
-Intro/ApiGraphql/api_schema.json
-Intro/AuthGraphql/auth_schema.json
