@@ -64,13 +64,13 @@ final class ConverterView: BaseView {
         
        let doneButton = UIBarButtonItem.init(title: "Done", style: .done, target: self, action: #selector(onDoneButtonTapped))
        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil)
-       doneButton.tintColor = .black
+        doneButton.tintColor = .appGreen
         toolBar.items = [flexibleSpace , doneButton]
         return toolBar
     }()
     
     override func create() {
-        backgroundColor = UIColor(named: "AppGreen")
+        backgroundColor = .appGreen
         addSubview(amountTextField)
         addSubview(selectedCurrencyView)
         addSubview(conversionCollectionView)
