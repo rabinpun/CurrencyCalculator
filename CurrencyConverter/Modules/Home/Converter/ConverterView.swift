@@ -14,10 +14,11 @@ final class ConverterView: BaseView {
         textField.layer.borderWidth = 1
         textField.layer.borderColor = UIColor.black.cgColor
         textField.layer.cornerRadius = 10
+        textField.backgroundColor = .white
         textField.textAlignment = .right
         textField.textColor = .black
         textField.keyboardType = .decimalPad
-        textField.backgroundColor = .gray.withAlphaComponent(0.1)
+        textField.placeholder = "Please enter the amount..."
         textField.translatesAutoresizingMaskIntoConstraints = false
         return textField
     }()
@@ -27,7 +28,7 @@ final class ConverterView: BaseView {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.cgColor
         view.layer.cornerRadius = 10
-        view.backgroundColor = .gray.withAlphaComponent(0.1)
+        view.backgroundColor = .white
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -69,8 +70,7 @@ final class ConverterView: BaseView {
     }()
     
     override func create() {
-        backgroundColor = .white
-        
+        backgroundColor = UIColor(named: "AppGreen")
         addSubview(amountTextField)
         addSubview(selectedCurrencyView)
         addSubview(conversionCollectionView)
