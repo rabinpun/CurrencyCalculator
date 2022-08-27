@@ -37,9 +37,10 @@ final class SelectedCurrencyView: UIView {
         NSLayoutConstraint.activate([
             
             currencyLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 5),
+            currencyLabel.trailingAnchor.constraint(equalTo: pickerButton.leadingAnchor, constant: -18),
             currencyLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             
-            pickerButton.leadingAnchor.constraint(equalTo: currencyLabel.trailingAnchor, constant: 18),
+            pickerButton.widthAnchor.constraint(equalToConstant: 25),
             pickerButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             pickerButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             
