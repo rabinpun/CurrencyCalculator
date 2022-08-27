@@ -94,6 +94,9 @@ extension ConverterController {
         
         if let selectedCurrencyInformation = viewModel.selectedCurrencyInformation.value {
             screenView.picker.selectRow(selectedCurrencyInformation.index, inComponent: 0, animated: true)
+        } else {
+            guard let firstCurrency = viewModel.currencyFetchedResultsController.fetchedObjects?.first?.createObject() else { return }
+            viewModel.selectedCurrencyInformation.value = (firstCurrency, 0)
         }
     }
     
