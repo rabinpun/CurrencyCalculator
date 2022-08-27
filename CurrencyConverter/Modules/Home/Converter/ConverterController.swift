@@ -14,25 +14,20 @@ class ConverterController: BaseController {
        baseView as! ConverterView
     }()
     
-    lazy var viewModel: ConverterViewModel = {
-        baseViewModel as! ConverterViewModel
+    lazy var viewModel: ConverterViewModelProtocol = {
+        baseViewModel as! ConverterViewModelProtocol
     }()
     
     override func setupUI() {
         
-        viewModel.currencyFetcher.observeEvents()
-        viewModel.currencyFetcher.fetch()
-        
         screenView.indicate = true
         screenView.amountTextField.delegate = self
         screenView.amountTextField.addTarget(self, action: #selector(textChanged(textField:)), for: .editingChanged)
-        
-        guard !viewModel.currencyFetcher.isFetching else { return }
         performFetch()
     }
     
     override func observeEvents() {
-        viewModel.currencyFetcher.result.sink { result in
+        viewModel.currencyResult.sink { result in
             switch result {
             case .success:
                 self.performFetch()
@@ -60,11 +55,9 @@ class ConverterController: BaseController {
     }
     
     private func performFetch() {
-        guard viewModel.currencyFetchedResultsController.delegate == nil else { return }
-        viewModel.currencyFetchedResultsController.delegate = self
         
         do {
-            try viewModel.currencyFetchedResultsController.performFetch()
+            try viewModel.addFetchControllerDelegate(self)
             DispatchQueue.main.async {
                 self.screenView.indicate = false
                 let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleCurrencySelectionTap))
@@ -95,7 +88,7 @@ extension ConverterController {
         if let selectedCurrencyInformation = viewModel.selectedCurrencyInformation.value {
             screenView.picker.selectRow(selectedCurrencyInformation.index, inComponent: 0, animated: true)
         } else {
-            guard let firstCurrency = viewModel.currencyFetchedResultsController.fetchedObjects?.first?.createObject() else { return }
+            guard let firstCurrency = viewModel.currencies.first?.createObject() else { return }
             viewModel.selectedCurrencyInformation.value = (firstCurrency, 0)
         }
     }
@@ -114,7 +107,7 @@ extension ConverterController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
         
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        viewModel.currencyFetchedResultsController.fetchedObjects?.count ?? 0
+        viewModel.currencies.count
     }
     
     func pickerView(_ pickerView: UIPickerView, rowHeightForComponent component: Int) -> CGFloat {
@@ -123,14 +116,14 @@ extension ConverterController: UIPickerViewDelegate, UIPickerViewDataSource {
     
     func pickerView(_ pickerView: UIPickerView, viewForRow row: Int, forComponent component: Int, reusing view: UIView?) -> UIView {
         
-    let data = viewModel.currencyFetchedResultsController.fetchedObjects?[row]
+    let data = viewModel.currencies[row]
     let reuseView = (view != nil ? view! : CurrencyPickerView()) as! CurrencyPickerView
-        reuseView.configure(currencyCode: data?.code)
+        reuseView.configure(currencyCode: data.code)
         return reuseView
     }
         
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        guard let data = viewModel.currencyFetchedResultsController.fetchedObjects?[row].createObject() else { return }
+        let data = viewModel.currencies[row].createObject()
         viewModel.selectedCurrencyInformation.value = (data, row)
     }
     
@@ -150,7 +143,7 @@ extension ConverterController: UICollectionViewDelegate, UICollectionViewDelegat
 extension ConverterController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        viewModel.canConvert() ? viewModel.currencyFetchedResultsController.fetchedObjects?.count ?? 0 : 1
+        viewModel.canConvert() ? viewModel.currencies.count : 1
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -160,9 +153,8 @@ extension ConverterController: UICollectionViewDataSource {
             return cell
         }
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ConversionResultCell.identifier, for: indexPath) as! ConversionResultCell
-        if let item = viewModel.currencyFetchedResultsController.fetchedObjects?[indexPath.row] {
-            cell.configureCell(name: item.name ?? "", currencyCode: item.code ?? "", value: "\(viewModel.getConvertedAmount(for: item.rate))")
-        }
+        let item = viewModel.currencies[indexPath.row]
+        cell.configureCell(name: item.name ?? "", currencyCode: item.code ?? "", value: "\(viewModel.getConvertedAmount(for: item.rate))")
         return cell
     }
     

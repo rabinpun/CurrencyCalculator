@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A19B93F28B9FE4400209851 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A19B93E28B9FE4400209851 /* Color.swift */; };
 		6A42A041288A948C00D42440 /* ApiRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42A040288A948C00D42440 /* ApiRepository.swift */; };
 		6A42A043288A9E4200D42440 /* ConverterViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A42A042288A9E4200D42440 /* ConverterViewModelTests.swift */; };
 		6A45562F288789A8003E2043 /* ConversionRateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A45562E288789A8003E2043 /* ConversionRateProvider.swift */; };
@@ -78,6 +79,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6A19B93E28B9FE4400209851 /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		6A42A040288A948C00D42440 /* ApiRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiRepository.swift; sourceTree = "<group>"; };
 		6A42A042288A9E4200D42440 /* ConverterViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConverterViewModelTests.swift; sourceTree = "<group>"; };
 		6A45562E288789A8003E2043 /* ConversionRateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversionRateProvider.swift; sourceTree = "<group>"; };
@@ -161,6 +163,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A19B93D28B9FE3400209851 /* Asset */ = {
+			isa = PBXGroup;
+			children = (
+				6A6D5A612886C1FA00058CA6 /* Assets.xcassets */,
+				6A19B93E28B9FE4400209851 /* Color.swift */,
+			);
+			path = Asset;
+			sourceTree = "<group>";
+		};
 		6A45562D2887898B003E2043 /* Providers */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,9 +352,9 @@
 				6A45563228878B50003E2043 /* BuildConfig */,
 				6A6574AD2886C85500FCECD6 /* Helpers */,
 				6A6574992886C40200FCECD6 /* Modules */,
-				6A6D5A612886C1FA00058CA6 /* Assets.xcassets */,
 				6A6D5A632886C1FA00058CA6 /* LaunchScreen.storyboard */,
 				6A6D5A662886C1FA00058CA6 /* Info.plist */,
+				6A19B93D28B9FE3400209851 /* Asset */,
 			);
 			path = CurrencyConverter;
 			sourceTree = "<group>";
@@ -563,6 +574,7 @@
 				6AAB95AB2887F8BD00E80061 /* NetworkStatusProvider.swift in Sources */,
 				6A968FA428896ED900266C62 /* SelectedCurrencyView.swift in Sources */,
 				6A45563828878CF4003E2043 /* Environment.swift in Sources */,
+				6A19B93F28B9FE4400209851 /* Color.swift in Sources */,
 				6A6574BD2886D01500FCECD6 /* ConverterController.swift in Sources */,
 				6A45562F288789A8003E2043 /* ConversionRateProvider.swift in Sources */,
 				6A70541F2886DAA60039D02D /* ConversionResultCell.swift in Sources */,

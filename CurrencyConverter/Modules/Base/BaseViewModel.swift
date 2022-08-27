@@ -11,8 +11,13 @@ import Combine
 /// protocol for app route
 protocol AppRoutable {}
 
+protocol BaseViewModelProtocol {
+    var bag: Set<AnyCancellable> { get set }
+    var trigger: PassthroughSubject<AppRoutable, Never> { get set }
+}
+
 /// The baseViewModel for every viewModel
-class BaseViewModel {
+class BaseViewModel: BaseViewModelProtocol {
 
     /// The subcription cleanup bag
     var bag: Set<AnyCancellable>

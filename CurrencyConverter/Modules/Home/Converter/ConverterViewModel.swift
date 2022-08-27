@@ -24,25 +24,34 @@ enum ConversionError: LocalizedError {
     }
 }
 
-final class ConverterViewModel: BaseViewModel {
+typealias CurrencyInformation = (currency: Currency.Object, index: Int)
+
+protocol ConverterViewModelProtocol: BaseViewModelProtocol {
+    var currencyResult: PassthroughSubject<Result<[Currency.Object], Error>,Never> { get }
+    var selectedCurrencyInformation: CurrentValueSubject<CurrencyInformation?,Never> { get }
+    var newAmount: CurrentValueSubject<Float,Never> { get }
+    var currencies: [Currency] { get }
     
-    typealias CurrencyInformation = (currency: Currency.Object, index: Int)
-    
-    var nonZeroConversionRatePredicate: NSPredicate {
+    func addFetchControllerDelegate(_ delegate: NSFetchedResultsControllerDelegate) throws
+    func setup()
+    func validateAmountAndCurrency() -> ConversionError?
+    func canConvert() -> Bool
+    func getConvertedAmount(for currencyRate: Float) -> Float
+}
+
+final class ConverterViewModel: BaseViewModel, ConverterViewModelProtocol {
+
+    private var nonZeroConversionRatePredicate: NSPredicate {
         NSPredicate(format: "%K != %@", #keyPath(Currency.rate), NSNumber(0))
     }
     
-    var nonNullCodePredicate: NSPredicate {
+    private var nonNullCodePredicate: NSPredicate {
         NSPredicate(format: "%K != NULL", #keyPath(Currency.code))
     }
     
-    let newAmount = CurrentValueSubject<Float,Never>(0)
-    
     private let currencyConverter = CurrencyConverter()
     
-    var selectedCurrencyInformation = CurrentValueSubject<CurrencyInformation?,Never>(nil)
-    
-    lazy var currencyFetchedResultsController: NSFetchedResultsController<Currency> = {
+    private lazy var currencyFetchedResultsController: NSFetchedResultsController<Currency> = {
         let request = NSFetchRequest<Currency>(entityName: Currency.entityName)
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [nonNullCodePredicate, nonZeroConversionRatePredicate])
         let nameSort = NSSortDescriptor(key: #keyPath(Currency.name), ascending: true)
@@ -54,13 +63,29 @@ final class ConverterViewModel: BaseViewModel {
         return fetchedResultsController
     }()
     
-    let databaseContext: NSManagedObjectContext
+    private let databaseContext: NSManagedObjectContext
     
-    let currencyFetcher: CurrenciesDataProvider
+    private let currencyFetcher: CurrenciesDataProvider
+    
+    var currencies: [Currency] { currencyFetchedResultsController.fetchedObjects ?? [] }
+    let newAmount = CurrentValueSubject<Float,Never>(0)
+    let selectedCurrencyInformation = CurrentValueSubject<CurrencyInformation?,Never>(nil)
+    var  currencyResult: PassthroughSubject<Result<[Currency.Object], Error>, Never> { currencyFetcher.result }
+    
     
     init(databaseContext: NSManagedObjectContext = Database.default.bgContext, currencyFetcher: CurrenciesDataProvider = CurrenciesDataProvider(dbRepository: CurrenyCoreDataRepository(), networkStatusProvider: NetworkStatusProvider.shared, conversionRateApiRepository: ConversionRateApiRepository(), currencyApiRepository: CurrencyApiRepository())) {
         self.databaseContext = databaseContext
         self.currencyFetcher = currencyFetcher
+    }
+    
+    func setup() {
+        currencyFetcher.observeEvents()
+        currencyFetcher.fetch()
+    }
+    
+    func addFetchControllerDelegate(_ delegate: NSFetchedResultsControllerDelegate) throws {
+        currencyFetchedResultsController.delegate = delegate
+        try currencyFetchedResultsController.performFetch()
     }
     
     @discardableResult

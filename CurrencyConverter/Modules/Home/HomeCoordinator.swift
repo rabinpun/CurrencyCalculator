@@ -25,6 +25,7 @@ final class HomeCoordinator: BaseCoordinator {
     private func showConverter() {
         let view = ConverterView()
         let viewModel = ConverterViewModel()
+        viewModel.setup()
         
         let controller = ConverterController(baseView: view, baseViewModel: viewModel)
         route.setRoot(controller)
