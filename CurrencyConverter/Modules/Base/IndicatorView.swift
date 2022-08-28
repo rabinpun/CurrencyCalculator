@@ -21,7 +21,7 @@ struct DefaultConfig: IndicatorConfig {
     var padding: CGFloat = 10.0
     
     /// The color for the indicator
-    var indicatorColor: UIColor = .red
+    var indicatorColor: UIColor = .appGreen
     
     /// The dimension of the indicator
     var indicatorDimension: CGSize = CGSize(width: 60.0, height: 60.0)
