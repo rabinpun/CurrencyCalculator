@@ -13,4 +13,8 @@ extension UIColor {
         Self.init(named: "AppGreen")!
     }
     
+    static var appBlue: Self {
+        Self.init(named: "AppBlue")!
+    }
+    
 }
