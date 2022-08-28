@@ -25,7 +25,7 @@ class ConversionResultCell: UICollectionViewCell {
     var countryFlag: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
-        imageView.tintColor = .black
+        imageView.tintColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -33,7 +33,7 @@ class ConversionResultCell: UICollectionViewCell {
     var currencyName: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .darkGray
         label.numberOfLines = 0
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +43,7 @@ class ConversionResultCell: UICollectionViewCell {
     var conversionValue: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16, weight: .heavy)
-        label.textColor = .black
+        label.textColor = .white
         label.numberOfLines = 0
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false

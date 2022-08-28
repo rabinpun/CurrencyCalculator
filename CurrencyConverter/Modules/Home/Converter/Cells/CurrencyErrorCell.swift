@@ -12,7 +12,7 @@ class CurrencyErrorCell: UICollectionViewCell {
     var errorLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
-        label.textColor = .black
+        label.textColor = .darkGray
         label.numberOfLines = 0
         label.textAlignment = .center
         label.translatesAutoresizingMaskIntoConstraints = false
