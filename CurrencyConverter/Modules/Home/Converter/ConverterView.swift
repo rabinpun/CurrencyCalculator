@@ -26,7 +26,6 @@ final class ConverterView: BaseView {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.cgColor
         view.layer.cornerRadius = 10
-//        view.backgroundColor = .gray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -95,6 +94,8 @@ final class ConverterView: BaseView {
         containerView.layer.shadowOpacity = 0.3
         containerView.layer.shadowRadius = 7
         containerView.layer.shadowOffset = CGSize(width: 0, height: -10)
+        containerView.layer.shouldRasterize = true
+        containerView.layer.rasterizationScale = UIScreen.main.scale
     }
     
     override func create() {
