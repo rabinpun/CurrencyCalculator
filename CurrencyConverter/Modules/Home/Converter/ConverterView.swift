@@ -13,10 +13,6 @@ final class ConverterView: BaseView {
     
     lazy var amountTextField: TextField = {
         let textField = TextField(frame: .zero)
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.black.cgColor
-        textField.layer.cornerRadius = 10
-        textField.backgroundColor = .white
         textField.textAlignment = .right
         textField.textColor = .black
         textField.keyboardType = .decimalPad
@@ -30,7 +26,7 @@ final class ConverterView: BaseView {
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.black.cgColor
         view.layer.cornerRadius = 10
-        view.backgroundColor = .white
+//        view.backgroundColor = .gray
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -41,16 +37,20 @@ final class ConverterView: BaseView {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.backgroundColor = .clear
         collectionView.showsVerticalScrollIndicator = false
-//        collectionView.backgroundColor = .clear
         collectionView.bounces = false
         collectionView.contentInsetAdjustmentBehavior = .never
-        collectionView.contentInset = .zero
         collectionView.maskTop(40)
         collectionView.contentInset = UIEdgeInsets(top: 20, left: 5, bottom: 0, right: 5)
         collectionView.register(ConversionResultCell.self, forCellWithReuseIdentifier: ConversionResultCell.identifier)
         collectionView.register(CurrencyErrorCell.self, forCellWithReuseIdentifier: CurrencyErrorCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
+    }()
+    
+    lazy var containerView: UIView = {
+       let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     lazy var picker: UIPickerView = {
@@ -75,21 +75,34 @@ final class ConverterView: BaseView {
     }()
     
     override func layoutSubviews() {
-        guard !viewsLayedout, conversionCollectionView.frame.minY > 0 else { return }
+        guard !viewsLayedout, conversionCollectionView.frame.height > 0 else { return }
         viewsLayedout.toggle()
-        addGradient([.appBlue, .appGreen], locations: [0, 1], frame: CGRect(x: 0, y: 0, width: frame.width, height: conversionCollectionView.frame.minY + 50))
+        addGradientAndShadow()
+        
+    }
+    
+    private func addGradientAndShadow() {
+        addGradient([.appBlue, .appGreen], locations: [0, 1], frame: CGRect(x: 0, y: 0, width: frame.width, height: containerView.frame.minY + 50))
         
         let view = UIView()
         let gradientFrame = CGRect(x: 0, y: 0, width: conversionCollectionView.bounds.width, height: conversionCollectionView.bounds.height)
         view.addGradient([.appGreen, .appBlue], locations: [0, 1], frame: gradientFrame)
         conversionCollectionView.backgroundView = view
+        
+        
+        containerView.layer.shadowPath = UIBezierPath(roundedRect: containerView.bounds, cornerRadius: 40).cgPath
+        containerView.layer.shadowColor = UIColor.black.cgColor
+        containerView.layer.shadowOpacity = 0.3
+        containerView.layer.shadowRadius = 7
+        containerView.layer.shadowOffset = CGSize(width: 0, height: -10)
     }
     
     override func create() {
         backgroundColor = .white
         addSubview(amountTextField)
         addSubview(selectedCurrencyView)
-        addSubview(conversionCollectionView)
+        addSubview(containerView)
+        containerView.addSubview(conversionCollectionView)
         
         NSLayoutConstraint.activate([
             
@@ -103,10 +116,15 @@ final class ConverterView: BaseView {
             selectedCurrencyView.trailingAnchor.constraint(equalTo: amountTextField.trailingAnchor),
             selectedCurrencyView.heightAnchor.constraint(equalToConstant: 50),
             
-            conversionCollectionView.topAnchor.constraint(equalTo: selectedCurrencyView.bottomAnchor, constant: 40),
-            conversionCollectionView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            conversionCollectionView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            conversionCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            containerView.topAnchor.constraint(equalTo: selectedCurrencyView.bottomAnchor, constant: 40),
+            containerView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            containerView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            
+            conversionCollectionView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            conversionCollectionView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            conversionCollectionView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            conversionCollectionView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
         ])
     }
     
