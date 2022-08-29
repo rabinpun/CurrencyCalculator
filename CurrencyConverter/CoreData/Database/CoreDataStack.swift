@@ -107,18 +107,12 @@ final class AppDataStack: CoreDataStack {
         context.shouldDeleteInaccessibleFaults = true
     }
     
-    // MARK: Persistent store coordinator
-    final lazy var storeCoordinator: NSPersistentStoreCoordinator = {
-        return persistentContainer.persistentStoreCoordinator
-    }()
-    
     final lazy var managedObjectModel: NSManagedObjectModel = {
         guard let modelUrl = bundle.url(forResource: modelName, withExtension: "momd") else {
             fatalError("could not find managed object model in bundle")
         }
         return NSManagedObjectModel(contentsOf: modelUrl)!
     }()
-    
     
     // MARK: Store description
      fileprivate lazy var storeDescription: NSPersistentStoreDescription = {
