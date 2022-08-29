@@ -15,7 +15,11 @@ extension JsonConvertible {
         let otherSelf = Mirror(reflecting: self)
         for child in otherSelf.children {
             if let key = child.label {
-                dict[key] = child.value
+                if let childValue = child.value as? JsonConvertible {
+                    dict[key] = childValue.toDict()
+                } else {
+                    dict[key] = child.value
+                }
             }
         }
         return dict
