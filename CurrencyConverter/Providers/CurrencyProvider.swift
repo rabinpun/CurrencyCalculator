@@ -28,17 +28,30 @@ enum CurrencyError: LocalizedError {
     }
 }
 
+struct CurrenciesToCurrencyObjectAdapter: Adapter{
+    typealias Output = [Currency.Object]
+    typealias Input = Currencies
+    
+    func adapt(_ input: Input) -> Output {
+        input.map({ Currency.Object(rate: 0, code: $0.key, name: $0.value) })
+    }
+    
+}
+
 final class CurrencyApiRepository: ApiRepository<Currency.Object> {
     
     let url = Environment.getUrl(for: .currencies)
     
     override func fetch() {
-        cancellable = perfomrRequest(url: url, respnseType: Currencies.self)
+        cancellable = perfomrRequest(url: url, adapter: CurrenciesToCurrencyObjectAdapter())
             .sink(receiveCompletion: { self.handleCompletion(result: $0) },
-                  receiveValue: { currencies in
-                let currencyObjects = currencies.map({ Currency.Object(rate: 0, code: $0.key, name: $0.value) })
-                self.result.send(.success(currencyObjects))
+                  receiveValue: { result in
+                self.result.send(.success(result))
             })
+    }
+    
+    private func currenciesToCurrencyObjectMapper(_ currencies: Currencies) -> [Currency.Object] {
+        currencies.map({ Currency.Object(rate: 0, code: $0.key, name: $0.value) })
     }
     
 }

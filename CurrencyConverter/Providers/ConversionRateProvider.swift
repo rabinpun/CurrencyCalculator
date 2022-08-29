@@ -19,6 +19,16 @@ struct ConversionRateResponse: Decodable {
     
 }
 
+struct ConversionRateResponseToConversionRateAdapter: Adapter{
+    typealias Input = ConversionRateResponse
+    typealias Output = [ConversionRate]
+    
+    func adapt(_ input: Input) -> Output {
+        input.rates.map({ ConversionRate(code: $0.key, rate: $0.value) })
+    }
+    
+}
+
 final class ConversionRateApiRepository: ApiRepository<ConversionRate> {
     
     let url = Environment.getUrl(for: .latestJson)
@@ -26,12 +36,12 @@ final class ConversionRateApiRepository: ApiRepository<ConversionRate> {
     override func fetch() {
         let queryUrl = url.appending("app_id", value: Environment.getAppId())
         
-        cancellable = perfomrRequest(url: queryUrl, respnseType: ConversionRateResponse.self)
+        cancellable = perfomrRequest(url: queryUrl, adapter: ConversionRateResponseToConversionRateAdapter())
             .sink(receiveCompletion: { self.handleCompletion(result: $0) },
-              receiveValue: { conversionResponse in
-            let conversionRates = conversionResponse.rates.map({ ConversionRate(code: $0.key, rate: $0.value) })
-            self.result.send(.success(conversionRates))
+              receiveValue: { result in
+                self.result.send(.success(result))
         })
     }
+
     
 }

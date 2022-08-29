@@ -32,7 +32,7 @@ class ApiRepository<T>: DataFetcher {
     func fetch() {
     }
     
-    func perfomrRequest<O: Decodable>(url: URL, respnseType: O.Type) -> AnyPublisher<O,Error> {
+    func perfomrRequest<A: Adapter>(url: URL, adapter: A) -> AnyPublisher<A.Output,Error> {
         urlSession
             .dataTaskPublisher(for: url)
             .tryMap() { element -> Data in
@@ -42,7 +42,8 @@ class ApiRepository<T>: DataFetcher {
                     }
                 return element.data
                 }
-            .decode(type: O.self, decoder: JSONDecoder())
+            .decode(type: A.Input.self, decoder: JSONDecoder())
+            .map(adapter.adapt)
             .eraseToAnyPublisher()
     }
     
