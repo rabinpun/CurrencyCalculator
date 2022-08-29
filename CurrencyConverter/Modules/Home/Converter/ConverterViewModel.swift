@@ -41,16 +41,11 @@ protocol ConverterViewModelProtocol: BaseViewModelProtocol {
 
 final class ConverterViewModel: BaseViewModel, ConverterViewModelProtocol {
 
-    private var nonZeroConversionRatePredicate: NSPredicate {
-        NSPredicate(format: "%K != %@", #keyPath(Currency.rate), NSNumber(0))
-    }
-    
-    private var nonNullCodePredicate: NSPredicate {
-        NSPredicate(format: "%K != NULL", #keyPath(Currency.code))
-    }
-    
+    private let nonZeroConversionRatePredicate = NSPredicate(format: "%K != %@", #keyPath(Currency.rate), NSNumber(0))
+    private let nonNullCodePredicate = NSPredicate(format: "%K != NULL", #keyPath(Currency.code))
     private let currencyConverter = CurrencyConverter()
-    
+    private let databaseContext: NSManagedObjectContext
+    private let currencyFetcher: CurrenciesDataProvider
     private lazy var currencyFetchedResultsController: NSFetchedResultsController<Currency> = {
         let request = NSFetchRequest<Currency>(entityName: Currency.entityName)
         request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [nonNullCodePredicate, nonZeroConversionRatePredicate])
@@ -62,10 +57,6 @@ final class ConverterViewModel: BaseViewModel, ConverterViewModelProtocol {
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: databaseContext, sectionNameKeyPath: nil, cacheName: nil)
         return fetchedResultsController
     }()
-    
-    private let databaseContext: NSManagedObjectContext
-    
-    private let currencyFetcher: CurrenciesDataProvider
     
     var currencies: [Currency] { currencyFetchedResultsController.fetchedObjects ?? [] }
     let newAmount = CurrentValueSubject<Float,Never>(0)

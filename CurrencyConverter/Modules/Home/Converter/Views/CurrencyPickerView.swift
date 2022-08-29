@@ -9,7 +9,7 @@ import UIKit
 
 class CurrencyPickerView: UIView {
     
-    lazy var label: UILabel = {
+    private lazy var label: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
         label.textColor = .black
@@ -17,7 +17,7 @@ class CurrencyPickerView: UIView {
         return label
     }()
     
-    lazy var imageView: UIImageView = {
+    private lazy var imageView: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .black
@@ -25,7 +25,7 @@ class CurrencyPickerView: UIView {
         return imageView
     }()
     
-    lazy var containerView = UIView()
+    private lazy var containerView = UIView()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,7 +36,7 @@ class CurrencyPickerView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func addChildren() {
+    private func addChildren() {
         addSubview(containerView)
         containerView.translatesAutoresizingMaskIntoConstraints = false
         containerView.addSubview(imageView)

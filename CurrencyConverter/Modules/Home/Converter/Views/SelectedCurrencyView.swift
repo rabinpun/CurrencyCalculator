@@ -20,7 +20,7 @@ final class SelectedCurrencyView: UIView {
         return label
     }()
     
-    lazy var pickerButton: UIImageView = {
+    private lazy var pickerButton: UIImageView = {
         let imageView = UIImageView(image: UIImage(systemName: "chevron.down"))
         imageView.contentMode = .scaleAspectFit
         imageView.tintColor = .black
